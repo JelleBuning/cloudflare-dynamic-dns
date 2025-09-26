@@ -57,3 +57,5 @@ nunit-*.xml
 *.env.example
 *.env.local
 *.env.staging
+
+*.idea
