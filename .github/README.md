@@ -99,12 +99,12 @@ This installation method utilizes Docker Compose for a streamlined setup. Ensure
     name: cloudflare-dynamic-dns
     services:
       cloudflare.dynamic.dns:
-        container_name: "cloudflare.dynamic.dns"
-        image: ghcr.io/jellebuning/cloudflare.dynamic.dns
+        container_name: "cloudflare-dynamic-dns"
+        image: ghcr.io/jellebuning/cloudflare-dynamic-dns
         environment:
-          CF_ZONE_ID="<cloudflare_zone_id>"
-          CF_API_TOKEN="<cloudflare_api_token>"
-          CF_DOMAIN_NAMES="one.domain.com, two.domain.com"
+          CF_ZONE_ID: "<cloudflare_zone_id>"
+          CF_API_TOKEN: "<cloudflare_api_token>"
+          CF_DOMAIN_NAMES: "one.domain.com, two.domain.com"
 
     ```
 
