@@ -1,0 +1,8 @@
+﻿services:
+  cloudflaredynamicdns:
+    image: cloudflaredynamicdns
+    build:
+      context: .
+      dockerfile: src/CloudflareDynamicDns/Dockerfile
+    env_file:
+      - .env
