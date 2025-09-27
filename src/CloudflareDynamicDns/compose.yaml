@@ -1,8 +1,0 @@
-﻿services:
-  cloudflareipsync:
-    image: cloudflareipsync
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file:
-      - .env
