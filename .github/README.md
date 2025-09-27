@@ -24,7 +24,7 @@
 <h1 align="center">Cloudflare dynamic DNS</h3>
 
   <p align="center">
-    Remote Monitoring and Management (RMM) Software.
+    Reliable Cloudflare Record Synchronization for Dynamic IPs.
     <br />
     <a href="https://JelleBuning/cloudflare-dynamic-dns/not_found">Demo</a>
     ·
@@ -116,15 +116,6 @@ This installation method utilizes Docker Compose for a streamlined setup. Ensure
     ```
 
     This command will download the necessary images, create the containers, and start them in detached mode.
-
-
-4.  **Access the API:**
-    The API will be available at `http://localhost:7000`.
-
-**Important Notes:**
-
-* Replace `"CONNECTIONSTRING_HERE"` with a your database connectionstring.
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
