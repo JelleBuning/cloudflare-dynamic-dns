@@ -1,21 +1,25 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
-USER $APP_UID
-WORKDIR /app
+﻿FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS base
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["CloudflareDynamicDns/CloudflareDynamicDns.csproj", "CloudflareDynamicDns/"]
-RUN dotnet restore "CloudflareDynamicDns/CloudflareDynamicDns.csproj"
-COPY . .
-WORKDIR "/src/CloudflareDynamicDns"
-RUN dotnet build "./CloudflareDynamicDns.csproj" -c $BUILD_CONFIGURATION -o /app/build
+COPY /src .
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./CloudflareDynamicDns.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet restore "CloudflareDynamicDns/CloudflareDynamicDns.csproj" --runtime linux-musl-x64
+RUN dotnet publish "CloudflareDynamicDns/CloudflareDynamicDns.csproj" \
+    -c Release -o /app/publish \
+    --no-restore \
+    --runtime linux-musl-x64 \
+    --self-contained true \
+    /p:PublishSingleFile=true
 
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-alpine AS final
+
+RUN adduser --disabled-password \
+  --home /app \
+  --gecos '' dotnetuser && chown -R dotnetuser /app
+
+RUN apk upgrade musl
+
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "CloudflareDynamicDns.dll"]
+COPY --from=base /app/publish .
+
+ENTRYPOINT ["./CloudflareDynamicDns"]
