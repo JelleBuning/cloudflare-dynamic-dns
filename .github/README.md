@@ -25,10 +25,6 @@
 
   <p align="center">
     Reliable Cloudflare Record Synchronization for Dynamic IPs.
-    <br />
-    <a href="https://JelleBuning/cloudflare-dynamic-dns/not_found">Demo</a>
-    ·
-    <a href="https://github.com/JelleBuning/cloudflare-dynamic-dns/wiki">Explore the docs</a>
   </p>
 </div>
 
@@ -68,12 +64,13 @@ This project solves the common problem for users with dynamic IPs (like most res
 ---
 
 ### Features
-- **Cloudflare API Integration:** Securely updates A-records using the official Cloudflare API.
-- **Dynamic IP Detection:** Reliably checks your current public IP address against the existing DNS record.
-- **Automated Synchronization:** Only updates the record when the IP address has genuinely changed, minimizing API calls.
-- **Support for Multiple Domains/Records:** Easily configure and manage updates for multiple hosts or subdomains.
-- **Flexible Deployment:** Designed to run easily on various platforms (e.g., Raspberry Pi, Docker, a local server).
+Our Cloudflare Dynamic DNS client is designed for reliability and ease of use, ensuring your services are always reachable.
 
+* **Intelligent Synchronization:** Only updates your DNS records when a **genuine IP address change** is detected, significantly reducing unnecessary Cloudflare API calls.
+* **Multi-Record Management:** Easily configure and manage updates for **multiple domains, hosts, and subdomains** all from a single instance.
+* **Secure API Integration:** Uses the **official Cloudflare API** to securely and reliably update your DNS A-records.
+* **Versatile Deployment:** Built on **.NET** and available as a streamlined **Docker image**, making it simple to deploy on diverse platforms like a Raspberry Pi, NAS, or home server.
+* **Robust IP Detection:** Features reliable logic to accurately determine your current public IP address, ensuring precision in every update.
 
 ### Built With
 
@@ -102,10 +99,12 @@ This installation method utilizes Docker Compose for a streamlined setup. Ensure
         container_name: "cloudflare-dynamic-dns"
         image: ghcr.io/jellebuning/cloudflare-dynamic-dns
         environment:
-          CF_ZONE_ID: "<cloudflare_zone_id>"
-          CF_API_TOKEN: "<cloudflare_api_token>"
-          CF_DOMAIN_NAMES: "one.domain.com, two.domain.com"
+          # Required
+          CF_API_TOKEN: <cloudflare_api_token>
+          CF_DOMAIN_NAMES: domain.com, sub.domain.com
 
+          # Optional
+          INTERVAL_MINUTES: <interval> # defaults to 15 if variable is not set.
     ```
 
 2.  **Run Docker Compose:**

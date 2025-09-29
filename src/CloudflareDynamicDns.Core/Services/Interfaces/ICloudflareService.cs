@@ -5,5 +5,5 @@ namespace CloudflareDynamicDns.Core.Services.Interfaces;
 public interface ICloudflareService
 {
     Task<List<CloudflareDnsRecord>> GetDnsRecordsAsync();
-    Task UpdateIpAddressAsync(string domainName, string ip);
+    Task UpdateIpAddressAsync(CloudflareDnsRecord dnsRecord, string ip);
 }
