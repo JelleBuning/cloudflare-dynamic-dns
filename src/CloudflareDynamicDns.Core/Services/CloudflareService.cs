@@ -21,22 +21,44 @@ public class CloudflareService : ICloudflareService
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _config.ApiToken);
     }
 
-    public async Task<List<CloudflareDnsRecord>> GetDnsRecordsAsync()
+    private async Task<string> GetZoneIdAsync(string domain)
     {
-        var url = $"zones/{_config.ZoneId}/dns_records";
+        var baseDomain = GetBaseDomain(domain);
+        var url = $"zones?name={baseDomain}";
         var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync();
         var result = JsonSerializer.Deserialize<CloudflareResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        return result?.Result.Where(x => _config.DomainName.Split(',').Contains(x.Name)).ToList() ?? throw new Exception("Domain name not found!");
+        var zone = result?.Result.SingleOrDefault(x => x.Name.Equals(baseDomain, StringComparison.OrdinalIgnoreCase));
+        return zone?.Id ?? throw new Exception("Zone ID not found!");
     }
     
-    public async Task UpdateIpAddressAsync(string domainName, string ip)
+    public async Task<List<CloudflareDnsRecord>> GetDnsRecordsAsync()
     {
-        var encodedName = System.Net.WebUtility.UrlEncode(domainName);
-        var listUrl = $"zones/{_config.ZoneId}/dns_records?name={encodedName}&type=A";
+        var cloudflareDnsRecords = new List<CloudflareDnsRecord>();
+        foreach (var domainName in _config.DomainNames)
+        {
+            var zoneId = await GetZoneIdAsync(domainName);
+            var url = $"zones/{zoneId}/dns_records?name={domainName}";
+            var responseMessage = await _httpClient.GetAsync(url);
+            responseMessage.EnsureSuccessStatusCode();
+
+            var json = await responseMessage.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<CloudflareResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if (result == null) continue;
+            
+            result.Result.ForEach(x => x.ZoneId = zoneId);
+            cloudflareDnsRecords.AddRange(result.Result);
+        }
+        return cloudflareDnsRecords;
+    }
+    
+    public async Task UpdateIpAddressAsync(CloudflareDnsRecord dnsRecord, string ip)
+    {
+        var encodedName = System.Net.WebUtility.UrlEncode(dnsRecord.Name);
+        var listUrl = $"zones/{dnsRecord.ZoneId}/dns_records?name={encodedName}&type=A";
     
         var listResponse = await _httpClient.GetAsync(listUrl);
         listResponse.EnsureSuccessStatusCode();
@@ -45,11 +67,11 @@ public class CloudflareService : ICloudflareService
         var listResult = JsonSerializer.Deserialize<CloudflareResponse>(listJson,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        var existingRecord = listResult?.Result?.FirstOrDefault();
+        var existingRecord = listResult?.Result.FirstOrDefault();
 
         if (existingRecord == null)
         {
-            throw new Exception($"No existing A record found for {domainName}. Cannot update.");
+            throw new Exception($"No existing A record found for {dnsRecord}. Cannot update.");
         }
 
         if (existingRecord.Content == ip)
@@ -58,12 +80,12 @@ public class CloudflareService : ICloudflareService
         }
 
         var recordId = existingRecord.Id;
-        var updateUrl = $"zones/{_config.ZoneId}/dns_records/{recordId}";
+        var updateUrl = $"zones/{dnsRecord.ZoneId}/dns_records/{recordId}";
 
         var updatePayload = new
         {
             type = "A",
-            name = domainName,
+            name = dnsRecord.Name,
             content = ip,
             ttl = existingRecord.Ttl,
             proxied = existingRecord.Proxied
@@ -71,5 +93,18 @@ public class CloudflareService : ICloudflareService
     
         var updateResponse = await _httpClient.PatchAsJsonAsync(updateUrl, updatePayload);
         updateResponse.EnsureSuccessStatusCode();
+    }
+    
+    private string GetBaseDomain(string domainName)
+    {
+        if (!domainName.Contains("://"))
+        {
+            domainName = "http://" + domainName;
+        }
+        Uri.TryCreate(domainName, UriKind.Absolute, out var uri);
+        if(uri == null) throw new Exception("Invalid domain name!");
+        var host = uri.Host;
+        var parts = host.Split('.');
+        return parts.Length >= 2 ? string.Join(".", parts.Skip(parts.Length - 2).Take(2)) : host;
     }
 }
