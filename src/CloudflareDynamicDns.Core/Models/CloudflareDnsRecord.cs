@@ -8,4 +8,5 @@ public class CloudflareDnsRecord
     public string Content { get; set; }
     public int Ttl { get; set; }
     public bool Proxied { get; set; }
+    public string ZoneId { get; set; }
 }
