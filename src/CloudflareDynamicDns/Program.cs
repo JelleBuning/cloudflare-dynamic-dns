@@ -13,7 +13,10 @@ Host.CreateDefaultBuilder(args)
     {
         services.Configure<CloudflareOptions>(options => {
             options.ApiToken = hostContext.Configuration.GetValue<string>("CF_API_TOKEN") ?? throw new Exception("CF_API_TOKEN is missing");
-            options.DomainNames = hostContext.Configuration.GetValue<string>("CF_DOMAIN_NAMES")?.Split(',').ToList() ?? throw new Exception("CF_DOMAIN_NAMES is missing");
+            options.DomainNames = hostContext.Configuration.GetValue<string>("CF_DOMAIN_NAMES")?
+                .Replace(" ", "")
+                .Split(',')
+                .ToList() ?? throw new Exception("CF_DOMAIN_NAMES is missing");
             options.IntervalMinutes = hostContext.Configuration.GetValue("INTERVAL_MINUTES", 15);
         });
         services.AddTransient<IPublicIpAddressFetcher, PublicIpAddressFetcher>();

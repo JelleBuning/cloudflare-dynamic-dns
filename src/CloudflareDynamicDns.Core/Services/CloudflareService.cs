@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using CloudflareDynamicDns.Core.Models;
@@ -35,7 +36,7 @@ public class CloudflareService : ICloudflareService
         return zone?.Id ?? throw new Exception("Zone ID not found!");
     }
     
-    public async Task<List<CloudflareDnsRecord>> GetDnsRecordsAsync()
+    public async Task<List<CloudflareDnsRecord>> SyncDnsRecordsAsync(string ip)
     {
         var cloudflareDnsRecords = new List<CloudflareDnsRecord>();
         foreach (var domainName in _config.DomainNames)
@@ -48,16 +49,39 @@ public class CloudflareService : ICloudflareService
             var json = await responseMessage.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<CloudflareResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             if (result == null) continue;
+
+            if (result.Result.Count == 0 && result.Errors.Count == 0)
+            {
+                var status = await CreateRecordAsync(domainName, ip, zoneId);
+                if(status != HttpStatusCode.OK) continue;
+            }
             
             result.Result.ForEach(x => x.ZoneId = zoneId);
             cloudflareDnsRecords.AddRange(result.Result);
         }
         return cloudflareDnsRecords;
     }
-    
+
+    private async Task<HttpStatusCode> CreateRecordAsync(string domainName, string ip, string zoneId)
+    {
+        var url =  $"zones/{zoneId}/dns_records";
+        var createPayload = new
+        {
+            name = domainName,
+            ttl = 1, // auto
+            type = "A",
+            content = ip,
+            proxied = false
+        };
+        var jsonPayload = JsonSerializer.Serialize(createPayload);
+        var content = new StringContent(jsonPayload, System.Text.Encoding.UTF8, "application/json");
+        var response = await _httpClient.PostAsync(url, content);
+        return response.StatusCode;
+    }
+
     public async Task UpdateIpAddressAsync(CloudflareDnsRecord dnsRecord, string ip)
     {
-        var encodedName = System.Net.WebUtility.UrlEncode(dnsRecord.Name);
+        var encodedName = WebUtility.UrlEncode(dnsRecord.Name);
         var listUrl = $"zones/{dnsRecord.ZoneId}/dns_records?name={encodedName}&type=A";
     
         var listResponse = await _httpClient.GetAsync(listUrl);
@@ -99,7 +123,7 @@ public class CloudflareService : ICloudflareService
     {
         if (!domainName.Contains("://"))
         {
-            domainName = "http://" + domainName;
+            domainName = "https://" + domainName;
         }
         Uri.TryCreate(domainName, UriKind.Absolute, out var uri);
         if(uri == null) throw new Exception("Invalid domain name!");

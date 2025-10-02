@@ -13,7 +13,7 @@ public class DnsRecordWorker(IPublicIpAddressFetcher publicIpAddressFetcher, ICl
         while (!stoppingToken.IsCancellationRequested)
         {
             var ip = await publicIpAddressFetcher.FetchIpAddressAsync();
-            var dnsRecords = await cloudflareService.GetDnsRecordsAsync();
+            var dnsRecords = await cloudflareService.SyncDnsRecordsAsync(ip);
             foreach (var cloudflareDnsRecord in dnsRecords.Where(dnsRecord => dnsRecord.Content != ip))
             {
                 await cloudflareService.UpdateIpAddressAsync(cloudflareDnsRecord, ip);
