@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/CloudflareDynamicDns.Core/CloudflareDynamicDns.Core.csproj" />
+  <Project Path="src/CloudflareDynamicDns/CloudflareDynamicDns.csproj" />
+</Solution>
