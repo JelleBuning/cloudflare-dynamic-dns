@@ -1,4 +1,7 @@
 <Solution>
-  <Project Path="src/CloudflareDynamicDns.Core/CloudflareDynamicDns.Core.csproj" />
-  <Project Path="src/CloudflareDynamicDns/CloudflareDynamicDns.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/CloudflareDynamicDns.Core/CloudflareDynamicDns.Core.csproj" />
+    <Project Path="src/CloudflareDynamicDns/CloudflareDynamicDns.csproj" />
+    <File Path="src\Directory.Packages.props" />
+  </Folder>
 </Solution>

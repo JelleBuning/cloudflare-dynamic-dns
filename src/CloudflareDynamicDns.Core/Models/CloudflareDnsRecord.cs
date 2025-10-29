@@ -2,11 +2,10 @@
 
 public class CloudflareDnsRecord
 {
-    public string Id { get; set; }
-    public string Type { get; set; }
-    public string Name { get; set; }
-    public string Content { get; set; }
-    public int Ttl { get; set; }
-    public bool Proxied { get; set; }
-    public string ZoneId { get; set; }
+    public required string Id { get; init; }
+    public required string Name { get; init; }
+    public required string Content { get; init; }
+    public required string ZoneId { get; set; }
+    public int Ttl { get; init; }
+    public bool Proxied { get; init; }
 }
