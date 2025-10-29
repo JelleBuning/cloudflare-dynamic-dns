@@ -2,8 +2,8 @@
 
 public class CloudflareResponse
 {
-    public bool Success { get; set; }
-    public List<object> Errors { get; set; }
-    public List<object> Messages { get; set; }
-    public List<CloudflareDnsRecord> Result { get; set; }
+    public bool Success { get; init; }
+    public List<object> Errors { get; init; } = [];
+    public List<object> Messages { get; init; } = [];
+    public List<CloudflareDnsRecord> Result { get; init; } = [];
 }
