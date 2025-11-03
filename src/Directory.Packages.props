@@ -3,8 +3,8 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
-        <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.9" />
-        <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.9" />
+        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+        <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.10" />
+        <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.10" />
     </ItemGroup>
 </Project>
