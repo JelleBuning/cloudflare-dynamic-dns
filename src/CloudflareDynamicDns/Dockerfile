@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS base
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS base
 
 WORKDIR /src
 COPY /src .
@@ -11,7 +11,7 @@ RUN dotnet publish "CloudflareDynamicDns/CloudflareDynamicDns.csproj" \
     --self-contained true \
     /p:PublishSingleFile=true
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-alpine AS final
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine AS final
 
 RUN adduser --disabled-password \
   --home /app \
