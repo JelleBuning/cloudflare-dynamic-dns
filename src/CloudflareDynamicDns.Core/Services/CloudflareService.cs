@@ -5,7 +5,6 @@ using System.Text.Json;
 using CloudflareDynamicDns.Core.Models;
 using CloudflareDynamicDns.Core.Services.Interfaces;
 using Microsoft.Extensions.Options;
-using CloudflareDnsRecord = CloudflareDynamicDns.Core.Models.CloudflareDnsRecord;
 
 namespace CloudflareDynamicDns.Core.Services;
 
@@ -13,7 +12,8 @@ public class CloudflareService : ICloudflareService
 {
     private readonly CloudflareOptions _config;
     private readonly HttpClient _httpClient;
-    
+    private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+
     public CloudflareService(HttpClient httpClient, IOptions<CloudflareOptions> cloudflareOptions)
     {
         _config = cloudflareOptions.Value;
@@ -30,7 +30,8 @@ public class CloudflareService : ICloudflareService
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync();
-        var result = JsonSerializer.Deserialize<CloudflareResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        
+        var result = JsonSerializer.Deserialize<CloudflareResponse>(json, _jsonSerializerOptions);
 
         var zone = result?.Result.SingleOrDefault(x => x.Name.Equals(baseDomain, StringComparison.OrdinalIgnoreCase));
         return zone?.Id ?? throw new Exception("Zone ID not found!");
@@ -47,7 +48,7 @@ public class CloudflareService : ICloudflareService
             responseMessage.EnsureSuccessStatusCode();
 
             var json = await responseMessage.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<CloudflareResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var result = JsonSerializer.Deserialize<CloudflareResponse>(json, _jsonSerializerOptions);
             if (result == null) continue;
 
             if (result.Result.Count == 0 && result.Errors.Count == 0)
@@ -88,16 +89,11 @@ public class CloudflareService : ICloudflareService
         listResponse.EnsureSuccessStatusCode();
 
         var listJson = await listResponse.Content.ReadAsStringAsync();
-        var listResult = JsonSerializer.Deserialize<CloudflareResponse>(listJson,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var listResult = JsonSerializer.Deserialize<CloudflareResponse>(listJson, _jsonSerializerOptions);
 
-        var existingRecord = listResult?.Result.FirstOrDefault();
-
-        if (existingRecord == null)
-        {
-            throw new Exception($"No existing A record found for {dnsRecord}. Cannot update.");
-        }
-
+        var existingRecord = listResult?.Result.FirstOrDefault() 
+                             ?? throw new Exception($"No existing A record found for {dnsRecord}. Cannot update.");
+        
         if (existingRecord.Content == ip)
         {
             return;
@@ -119,7 +115,7 @@ public class CloudflareService : ICloudflareService
         updateResponse.EnsureSuccessStatusCode();
     }
     
-    private string GetBaseDomain(string domainName)
+    private static string GetBaseDomain(string domainName)
     {
         if (!domainName.Contains("://"))
         {
