@@ -17,14 +17,10 @@
 [![Issues][issues-shield]][issues-url]
 [![GNU Affero General Public License v3.0 License][license-shield]][license-url]
 
-
-
 <div align="center">
-
-<h1 align="center">Cloudflare dynamic DNS</h3>
-
+<h1 align="center">Cloudflare dynamic DNS client (A-record updater)</h3>
   <p align="center">
-    Reliable Cloudflare Record Synchronization for Dynamic IPs.
+    Automatically updates your Cloudflare DNS A records when your public IP changes.
   </p>
 </div>
 
@@ -89,6 +85,7 @@ Before beginning, ensure that your development environment is properly configure
 This installation method utilizes Docker Compose for a streamlined setup. Ensure you have Docker and Docker Compose installed on your system.
 
 1.  **Create a `docker-compose.yml` file:**
+
     Create a new file named `docker-compose.yml` in a directory of your choice. Copy and paste the following content into it:
 
     ```yaml
@@ -108,6 +105,7 @@ This installation method utilizes Docker Compose for a streamlined setup. Ensure
     ```
 
 2.  **Run Docker Compose:**
+
     In the same directory as your `docker-compose.yml` file, execute the following command:
 
     ```bash
