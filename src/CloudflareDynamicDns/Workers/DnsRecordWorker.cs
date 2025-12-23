@@ -6,7 +6,11 @@ using Microsoft.Extensions.Options;
 
 namespace CloudflareDynamicDns.Workers;
 
-public class DnsRecordWorker(IPublicIpAddressFetcher publicIpAddressFetcher, ICloudflareService cloudflareService, IOptions<CloudflareOptions> cloudflareOptions) : BackgroundService
+public class DnsRecordWorker(
+    IPublicIpAddressFetcher publicIpAddressFetcher, 
+    ICloudflareService cloudflareService, 
+    IOptions<CloudflareOptions> cloudflareOptions
+) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
