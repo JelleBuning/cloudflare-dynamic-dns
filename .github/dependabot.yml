@@ -9,6 +9,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    assignees:
+      - "JelleBuning"
     groups:
       actions-deps:
         patterns:
