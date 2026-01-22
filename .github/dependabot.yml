@@ -9,7 +9,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    assignees:
+    reviewers:
       - "JelleBuning"
     groups:
       actions-deps:
@@ -21,6 +21,8 @@ updates:
     target-branch: "main" # The branch that dependabot will target
     schedule:
       interval: "weekly"
+    reviewers:
+      - "JelleBuning"
     groups:
       nuget-deps:
         patterns:
