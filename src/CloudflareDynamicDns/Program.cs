@@ -20,7 +20,7 @@ Host.CreateDefaultBuilder(args)
             options.IntervalMinutes = hostContext.Configuration.GetValue("INTERVAL_MINUTES", 15);
         });
 
-        services.AddTransient<IPublicIpAddressFetcher, PublicIpAddressFetcher>();
+        services.AddHttpClient<IPublicIpAddressFetcher, CloudflareDiagnosticsFetcher>();
         services.AddHttpClient<ICloudflareService, CloudflareService>()
             .AddStandardResilienceHandler(options =>
             {

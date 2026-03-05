@@ -4,4 +4,7 @@
     <Project Path="src/CloudflareDynamicDns/CloudflareDynamicDns.csproj" />
     <File Path="src\Directory.Packages.props" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CloudflareDynamicDns.Core.Tests/CloudflareDynamicDns.Core.Tests.csproj" />
+  </Folder>
 </Solution>
