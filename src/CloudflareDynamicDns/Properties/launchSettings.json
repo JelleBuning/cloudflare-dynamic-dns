@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "CloudflareDynamicDns": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "CF_API_TOKEN": "fYPB-mcmRQc2rdKqQJQ0a85FTIpmY9bJHVIlhuAO",
+        "CF_DOMAIN_NAMES": "home.jellebuning.nl"
+      }
+    }
+  }
+}
