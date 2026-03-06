@@ -6,5 +6,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CloudflareDynamicDns.Core.Tests/CloudflareDynamicDns.Core.Tests.csproj" />
+    <Project Path="tests/CloudflareDynamicDns.Tests/CloudflareDynamicDns.Tests.csproj" />
   </Folder>
 </Solution>
