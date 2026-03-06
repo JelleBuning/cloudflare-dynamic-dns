@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\CloudflareDynamicDns.Core\CloudflareDynamicDns.Core.csproj" />
+        <ProjectReference Include="..\..\src\CloudflareDynamicDns\CloudflareDynamicDns.csproj" />
     </ItemGroup>
 
 </Project>
