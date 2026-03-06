@@ -2,9 +2,10 @@
   <Folder Name="/src/">
     <Project Path="src/CloudflareDynamicDns.Core/CloudflareDynamicDns.Core.csproj" />
     <Project Path="src/CloudflareDynamicDns/CloudflareDynamicDns.csproj" />
-    <File Path="src\Directory.Packages.props" />
+    <File Path="Directory.Packages.props" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/CloudflareDynamicDns.Core.Tests/CloudflareDynamicDns.Core.Tests.csproj" />
+    <Project Path="tests/CloudflareDynamicDns.Tests/CloudflareDynamicDns.Tests.csproj" />
   </Folder>
 </Solution>
