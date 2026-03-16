@@ -6,6 +6,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-    uses: ./.github/workflows/dotnet-build-test.yml
+    uses: ./.github/workflows/actions/dotnet-build-test.yml
     with:
       os: ${{ matrix.os }}
