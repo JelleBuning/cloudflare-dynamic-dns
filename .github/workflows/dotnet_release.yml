@@ -19,7 +19,7 @@ env:
 
 jobs:
   test:
-    uses: ./.github/workflows/dotnet-build-test.yml
+    uses: ./.github/workflows/actions/dotnet-build-test.yml
 
   publish:
     needs: test
