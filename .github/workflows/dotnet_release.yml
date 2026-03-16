@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Setup .NET environment
-        uses: ./.github/workflows/actions/setup-dotnet-env
+        uses: ./.github/actions/setup-dotnet-env
 
       - name: Publish win-x64
         run: dotnet publish ./src/CloudflareDynamicDns/CloudflareDynamicDns.csproj --configuration Release --output ./publish/win-x64 --self-contained true --runtime win-x64
