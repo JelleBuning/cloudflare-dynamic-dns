@@ -19,34 +19,7 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Load nuget cache
-        uses: actions/cache@v5
-        with:
-          path: |
-            ~/.nuget/packages
-            !~/.nuget/packages/unwanted
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Install dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --no-restore --configuration Release
-
-      - name: Test
-        run: dotnet test --no-build --configuration Release --logger GitHubActions
+    uses: ./.github/workflows/dotnet-build-test.yml
 
   publish:
     needs: test
@@ -55,10 +28,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '10.0.x'
+      - name: Setup .NET environment
+        uses: ./.github/actions/setup-dotnet-env
 
       - name: Publish win-x64
         run: dotnet publish ./src/CloudflareDynamicDns/CloudflareDynamicDns.csproj --configuration Release --output ./publish/win-x64 --self-contained true --runtime win-x64
