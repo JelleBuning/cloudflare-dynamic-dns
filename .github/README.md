@@ -41,6 +41,7 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#local-development">Local development</a></li>
       </ul>
     </li>
     <li><a href="#contributing">Contributing</a></li>
@@ -112,6 +113,30 @@ This installation method utilizes Docker Compose for a streamlined setup. Ensure
     ```
 
     This command will download the necessary images, create the containers, and start them in detached mode.
+
+### Local development
+Running from source (Visual Studio, Rider, or `dotnet run`) reads configuration from
+`src/CloudflareDynamicDns/Properties/launchSettings.json`. **That file is git-ignored on purpose** -
+it holds a live Cloudflare API token. Never commit it.
+
+Copy the template and fill in your own values:
+
+```bash
+cp src/CloudflareDynamicDns/Properties/launchSettings.json.example src/CloudflareDynamicDns/Properties/launchSettings.json
+```
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `CF_API_TOKEN` | yes | Cloudflare API token with `Zone.DNS:Edit` permission on the target zone(s). |
+| `CF_DOMAIN_NAMES` | yes | Comma-separated A-records to keep updated, e.g. `domain.com, sub.domain.com`. |
+| `INTERVAL_MINUTES` | no | Poll interval in minutes; defaults to `15`. |
+
+Then run:
+
+```bash
+dotnet run --project src/CloudflareDynamicDns
+```
+
 
 <!-- CONTRIBUTING -->
 ## Contributing

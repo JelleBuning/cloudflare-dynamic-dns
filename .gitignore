@@ -60,3 +60,5 @@ nunit-*.xml
 
 *.idea
 .vs/
+
+**/launchSettings.json

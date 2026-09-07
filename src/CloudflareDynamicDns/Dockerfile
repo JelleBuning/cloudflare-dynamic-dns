@@ -1,6 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS base
 
 WORKDIR /src
+COPY Directory.Packages.props .
 COPY /src .
 
 RUN dotnet restore "CloudflareDynamicDns/CloudflareDynamicDns.csproj" --runtime linux-musl-x64

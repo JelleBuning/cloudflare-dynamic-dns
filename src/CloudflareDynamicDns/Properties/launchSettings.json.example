@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "CloudflareDynamicDns": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "CF_API_TOKEN": "",
+        "CF_DOMAIN_NAMES": "",
+        "INTERVAL_MINUTES": "15"
+      }
+    }
+  }
+}
